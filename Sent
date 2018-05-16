@@ -1,0 +1,20 @@
+file='w'
+>$file
+d=$(date +"%d")
+m=$(date +"%m")
+y=$(date +"%Y")
+F_temperature=$(cat weather.json | jq ".list[] | select(.dt_txt==\"$y-$m-$d 18:00:00\")|.main.temp")
+F_description=$(cat weather.json | jq ".list[] | select(.dt_txt==\"$y-$m-$d 18:00:00\")|.weather[].description"| sed 's\"\\g')
+F_SpeedWild=$(cat weather.json | jq ".list[] | select(.dt_txt==\"$y-$m-$d 18:00:00\")|.wind.speed")
+S_temperature=$(cat weather.json | jq ".list[] | select(.dt_txt==\"$y-$m-$d 21:00:00\")|.main.temp")
+S_description=$(cat weather.json | jq ".list[] | select(.dt_txt==\"$y-$m-$d 21:00:00\")|.weather[].description"| sed 's\"\\g')
+S_SpeedWild=$(cat weather.json | jq ".list[] | select(.dt_txt==\"$y-$m-$d 21:00:00\")|.wind.speed")
+
+echo -e "Погода в Рівному на $d.$m.$y до 18.00: \nСередня температура: $F_temperature \nОпис погоди: $F_description \nШвидкість вітру: $F_SpeedWild \nПогода в Рівному на $d.$m.$y до 21.00: \nСередня температура: $S_temperature \nОпис погоди: $S_description \nШвидкість вітру: $S_SpeedWild " | mutt -s "Weather" bogdan.boychyk654@gmail.com
+
+echo $F_temperature >file
+echo $F_description >>file
+echo $F_SpeedWild >>file
+echo $S_temperature >>file
+echo $S_description >>file
+echo $S_SpeedWild >>file
